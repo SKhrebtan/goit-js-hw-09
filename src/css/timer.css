@@ -7,9 +7,11 @@ button[data-start] {
 }
 button[data-start][disabled]:hover {
   background-color: red;
+  color: black;
 }
 button[data-start]:hover {
   background-color: green;
+  color: white;
 }
 
 #datetime-picker {

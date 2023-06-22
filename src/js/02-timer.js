@@ -3,7 +3,7 @@ import "flatpickr/dist/flatpickr.min.css";
 import Notiflix from 'notiflix';
 
 Notiflix.Notify.init({
-    position: 'center-center',
+    position: 'left-top',
 });
  
 const refs = {
@@ -104,5 +104,5 @@ function updateClockValues({ days, hours, minutes, seconds }) {
 
 flatpickr(refs.inputDatePicker, options);
 
-refs.startButton.addEventListener('click', () => countdown.start());
+refs.startButton.addEventListener('click', countdown.start.bind(countdown));
  
