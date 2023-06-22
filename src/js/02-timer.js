@@ -15,7 +15,6 @@ const refs = {
     secsValuespan: document.querySelector('span[data-seconds]'),
 }
 let selectedTime = null;
-let intervalId = null;
 
 refs.startButton.disabled = true;
 
@@ -27,71 +26,83 @@ const options = {
     onClose(selectedDates) {
         if (selectedDates[0].getTime() <= Date.now()) {
             Notiflix.Notify.failure('Wrong date');
-   
+            refs.startButton.disabled = true;
+            countdown.stop();
             return;
         }
         else {
-            refs.daysValueSpan.textContent = '00';
-            refs.hoursValueSpan.textContent = '00';
-            refs.minsValueSpan.textContent = '00';
-            refs.secsValuespan.textContent = '00';
-            clearInterval(intervalId);
+            countdown.stop();
             refs.startButton.disabled = false;
             selectedTime = selectedDates[0].getTime();
-           
-            console.log(selectedTime)
-            
-    }
+           }
     }
 };
 
-function addLeadingZero(value) {
+
+class Countdown {
+    constructor({ onTick }) {
+        this.onTick = onTick;
+        this.isActive = false;
+        this.intervalId = null;
+    }
+    
+    start() {
+        if (this.isActive) {
+            return;
+        };
+        this.isActive = true;
+        
+        this.intervalId = setInterval(() => {
+            const currentTime = Date.now();
+            const deltaTime = selectedTime - currentTime;
+            const time = this.convertMs(deltaTime);
+            console.log(time)
+            this.onTick(time);
+            if (deltaTime <= 10000) {
+                document.body.style.backgroundColor = 'red';
+            }
+           if (deltaTime <= 0) {
+               this.stop();
+               document.body.style.backgroundColor = 'black';
+            }
+        }, 1000);
+    }
+     stop() {
+         clearInterval(this.intervalId);
+         this.isActive = false;
+         const time = this.convertMs(0);
+         this.onTick(time);
+    }
+    addLeadingZero(value) {
     return String(value).padStart(2, '0');
-};
-
-function convertMs(ms) {
+    };
+    convertMs(ms) {
    const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
-  const days = addLeadingZero(Math.floor(ms / day));
-  const hours = addLeadingZero(Math.floor((ms % day) / hour));
-  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
-  const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
+  const days = this.addLeadingZero(Math.floor(ms / day));
+  const hours = this.addLeadingZero(Math.floor((ms % day) / hour));
+  const minutes = this.addLeadingZero(Math.floor(((ms % day) % hour) / minute));
+  const seconds = this.addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
 
     return { days, hours, minutes, seconds };
-}
-
-const countdown = {
-    isActive: false,
-
-    start() {
-            if(this.isActive) {
-        return;
-        };
-        this.isActive = true;
-        
-        intervalId = setInterval(() => {
-            const currentTime = Date.now();
-            const deltaTime = selectedTime - currentTime;
-            const { days, hours, minutes, seconds } = convertMs(deltaTime);
-            console.log(deltaTime)
-            refs.daysValueSpan.textContent = days;
-            refs.hoursValueSpan.textContent = hours;
-            refs.minsValueSpan.textContent = minutes;
-            refs.secsValuespan.textContent = seconds;
-        }, 1000);
-    }
 };
+};
+
+const countdown = new Countdown({
+        onTick: updateClockValues,
+    });
+
+
+function updateClockValues({ days, hours, minutes, seconds }) {
+    refs.daysValueSpan.textContent = days;
+    refs.hoursValueSpan.textContent = hours;
+    refs.minsValueSpan.textContent = minutes;
+    refs.secsValuespan.textContent = seconds;
+}
 
 flatpickr(refs.inputDatePicker, options);
 
-
-
-function onStartCountdown(e) {
-    console.log(e);
-    countdown.start();
-}
-
-refs.startButton.addEventListener('click', countdown.start);
+refs.startButton.addEventListener('click', () => countdown.start());
  
