@@ -15,8 +15,10 @@ const refs = {
     secsValuespan: document.querySelector('span[data-seconds]'),
 }
 let selectedTime = null;
-
+let TIMECODE_KEY = "time-from-countdown";
 refs.startButton.disabled = true;
+
+
 
 const options = {
   enableTime: true,
@@ -56,6 +58,7 @@ class Countdown {
             const currentTime = Date.now();
             const deltaTime = selectedTime - currentTime;
             const time = this.convertMs(deltaTime);
+            localStorage.setItem(TIMECODE_KEY, JSON.stringify(time));
             console.log(time)
             this.onTick(time);
             if (deltaTime <= 10000) {
@@ -92,7 +95,7 @@ class Countdown {
 
 const countdown = new Countdown({
         onTick: updateClockValues,
-    });
+});
 
 
 function updateClockValues({ days, hours, minutes, seconds }) {
@@ -102,7 +105,17 @@ function updateClockValues({ days, hours, minutes, seconds }) {
     refs.secsValuespan.textContent = seconds;
 }
 
+
+
 flatpickr(refs.inputDatePicker, options);
 
 refs.startButton.addEventListener('click', countdown.start.bind(countdown));
  
+    
+// onPageLoad();
+// function onPageLoad() {
+//      const time = JSON.parse(localStorage.getItem(TIMECODE_KEY)) || null;
+//     selectedTime = updateClockValues(time);
+//     countdown.start.bind(countdown);
+//     console.log(countdown.start.bind(countdown))
+// }

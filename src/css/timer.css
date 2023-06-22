@@ -4,14 +4,17 @@ button[data-start] {
   margin-left: 300px;
   border-radius: 25%;
   font-size: 36px;
+  transition: all 300ms linear;
 }
 button[data-start][disabled]:hover {
   background-color: red;
   color: black;
+  scale: 0.9;
 }
 button[data-start]:hover {
   background-color: green;
   color: white;
+  scale: 1.1;
 }
 
 #datetime-picker {
