@@ -1,8 +1,12 @@
 import Notiflix from 'notiflix';
 
 Notiflix.Notify.init({
-    position: 'left-top',
-});
+  position: 'top-right',
+  cssAnimationStyle: 'from-left',
+  cssAnimationDuration: 700,
+  timeout: 3000,
+}
+);
 
 const promiseGenerator = document.querySelector('.form')
 
