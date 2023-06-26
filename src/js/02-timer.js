@@ -29,11 +29,11 @@ const options = {
         if (selectedDates[0].getTime() <= Date.now()) {
             Notiflix.Notify.failure('Wrong date');
             refs.startButton.disabled = true;
-            countdown.stop();
+            // countdown.stop();
             return;
         }
         else {
-            countdown.stop();
+            // countdown.stop();
             refs.startButton.disabled = false;
             selectedTime = selectedDates[0].getTime();
            }
