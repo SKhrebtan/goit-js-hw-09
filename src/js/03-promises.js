@@ -36,8 +36,7 @@ function onFormSubmit(e) {
  
 
   for (let i = 1; i <= formAmount; i += 1){
-    firstDelay += delayStep;
-
+    
     createPromise(i, firstDelay)
   .then(({ position, delay }) => {
     Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
@@ -46,7 +45,10 @@ function onFormSubmit(e) {
     Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
   });
     
-};}
+    firstDelay += delayStep;
+  };
+  promiseGenerator.reset();
+}
 
  
 

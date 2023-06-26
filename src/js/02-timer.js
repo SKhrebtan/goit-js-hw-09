@@ -10,7 +10,7 @@ const refs = {
     inputDatePicker: document.querySelector('#datetime-picker'),
     startButton: document.querySelector('button[data-start]'),
     daysValueSpan: document.querySelector('span[data-days]'),
-    hoursValueSpan: document.querySelector('span[data-hours'),
+    hoursValueSpan: document.querySelector('span[data-hours]'),
     minsValueSpan: document.querySelector('span[data-minutes]'),
     secsValuespan: document.querySelector('span[data-seconds]'),
 }
@@ -53,7 +53,7 @@ class Countdown {
             return;
         };
         this.isActive = true;
-        
+        document.body.style.backgroundColor = 'white';
         this.intervalId = setInterval(() => {
             const currentTime = Date.now();
             const deltaTime = selectedTime - currentTime;
@@ -69,12 +69,17 @@ class Countdown {
                document.body.style.backgroundColor = 'black';
             }
         }, 1000);
+        refs.inputDatePicker.disabled = true;
+        refs.startButton.disabled = true;
     }
      stop() {
          clearInterval(this.intervalId);
          this.isActive = false;
          const time = this.convertMs(0);
          this.onTick(time);
+          refs.inputDatePicker.disabled = false;
+         refs.startButton.disabled = false;
+         
     }
     addLeadingZero(value) {
     return String(value).padStart(2, '0');

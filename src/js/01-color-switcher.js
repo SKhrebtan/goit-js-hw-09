@@ -6,19 +6,22 @@ let intervalId = null;
 let counter = 0;
 refs.startButton.addEventListener('click', onStartButton);
 refs.stopButton.addEventListener('click', onStopButton);
+refs.stopButton.disabled = true;
 
 function onStartButton() {
     intervalId = setInterval(() => {
         console.log(counter += 1)
         document.body.style.backgroundColor = getRandomHexColor();
     }, 1000)
-    refs.startButton.setAttribute('disabled', '');
+    refs.startButton.disabled = true;
+    refs.stopButton.disabled = false;
 
 };
 
 function onStopButton(e) {
     clearInterval(intervalId);
-    refs.startButton.removeAttribute('disabled');
+    refs.startButton.disabled = false;
+    refs.stopButton.disabled = true;
 }
 
 function getRandomHexColor() {
