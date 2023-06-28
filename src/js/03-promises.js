@@ -8,9 +8,30 @@ Notiflix.Notify.init({
 }
 );
 
-const promiseGenerator = document.querySelector('.form')
+const promiseGenerator = document.querySelector('.form');
+const FORMDATA_KEY = "feedback-form"; 
+let formData = {};
+const { delay, step, amount } = promiseGenerator.elements;
 
 promiseGenerator.addEventListener('submit', onFormSubmit);
+promiseGenerator.addEventListener('input', onFormInput);
+
+onBlankReload();
+
+function onFormInput(e) {
+  formData[e.target.name] = e.target.value;
+  localStorage.setItem(FORMDATA_KEY, JSON.stringify(formData));
+}
+
+function onBlankReload() {
+  const savedSettings = localStorage.getItem(FORMDATA_KEY);
+  const parsedSettings = JSON.parse(savedSettings);
+    if (savedSettings) {
+      delay.value = parsedSettings.delay || '';
+      step.value = parsedSettings.step || '';
+      amount.value = parsedSettings.amount || '';
+         }
+};
 
 function createPromise(position, delay) {
   return new Promise((resolve, reject) => {
@@ -48,6 +69,8 @@ function onFormSubmit(e) {
     firstDelay += delayStep;
   };
   promiseGenerator.reset();
+  localStorage.removeItem(FORMDATA_KEY);
+  formData = {};
 }
 
  
